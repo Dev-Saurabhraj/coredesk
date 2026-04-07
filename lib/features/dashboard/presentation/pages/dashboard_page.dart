@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_event.dart';
+import 'package:coredesk/shared/widgets/app_bottom_navigation_bar.dart'
+    show BottomNavItem, AppBottomNavigationBar;
+import 'package:coredesk/features/dashboard/presentation/pages/home_screen.dart';
+import 'package:coredesk/features/leaves/presentation/pages/leaves_screen.dart';
+import 'package:coredesk/features/attendance/presentation/pages/attendance_screen.dart';
+import 'package:coredesk/features/dashboard/presentation/pages/profile_screen.dart';
+
+class DashboardPage extends StatefulWidget {
+  final String token;
+
+  const DashboardPage({super.key, required this.token});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  late PageController _pageController;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    context.read<DashboardBloc>().add(FetchDashboardDataEvent(widget.token));
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _handleRefresh() {
+    context.read<DashboardBloc>().add(RefreshDashboardEvent(widget.token));
+  }
+
+  void _onNavItemTapped(BottomNavItem item) {
+    final index = item.index;
+    setState(() {
+      _currentIndex = index;
+    });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  BottomNavItem get _currentItem => BottomNavItem.values[_currentIndex];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: [
+          HomeScreen(token: widget.token),
+          const LeavesScreen(),
+          const AttendanceScreen(),
+          const ProfileScreen(),
+        ],
+      ),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentItem: _currentItem,
+        onItemSelected: _onNavItemTapped,
+      ),
+    );
+  }
+}
