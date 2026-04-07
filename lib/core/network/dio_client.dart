@@ -2,18 +2,29 @@ import 'package:dio/dio.dart';
 import 'package:coredesk/core/constants/app_constants.dart';
 import 'package:coredesk/core/exceptions/exceptions.dart';
 import 'package:coredesk/core/network/mock_api_data.dart';
+import 'package:coredesk/core/utils/error_handler.dart';
 
 import '../apiServices/apiEndpoints.dart';
 
 class DioClient {
   late final Dio _dio;
+  static const int _maxRetries = 3;
+  static const Map<int, int> _retryStatusCodes = {
+    408: 1,
+    429: 2,
+    500: 3,
+    502: 3,
+    503: 2,
+    504: 2,
+  };
 
   DioClient() {
     _dio = Dio(
       BaseOptions(
         baseUrl: AppConstants.apiBaseUrl,
-        connectTimeout: AppConstants.apiTimeout,
-        receiveTimeout: AppConstants.apiTimeout,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 15),
         headers: AppConstants.defaultHeaders,
       ),
     );
@@ -31,29 +42,35 @@ class DioClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     String? token,
+    bool retryOnError = true,
   }) async {
-    try {
-      final options = Options();
-      if (token != null) {
-        options.headers?['Authorization'] = 'Bearer $token';
-      }
+    return _executeWithRetry(
+      () => _performGet(path, queryParameters, token),
+      retryOnError: retryOnError,
+      path: path,
+    );
+  }
 
-      final mockData = _getMockData(path);
-      if (mockData != null) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        return mockData;
-      }
+  Future<dynamic> _performGet(
+    String path,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  ) async {
+    final options = _createOptions(token);
 
-      final response = await _dio.get(
-        path,
-        queryParameters: queryParameters,
-        options: options,
-      );
-
-      return response.data;
-    } catch (e) {
-      _handleException(e);
+    final mockData = _getMockData(path);
+    if (mockData != null) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return mockData;
     }
+
+    final response = await _dio.get(
+      path,
+      queryParameters: queryParameters,
+      options: options,
+    );
+
+    return response.data;
   }
 
   Future<dynamic> post(
@@ -61,38 +78,45 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     String? token,
+    bool retryOnError = true,
   }) async {
-    try {
-      final options = Options();
-      if (token != null) {
-        options.headers?['Authorization'] = 'Bearer $token';
+    return _executeWithRetry(
+      () => _performPost(path, data, queryParameters, token),
+      retryOnError: retryOnError,
+      path: path,
+    );
+  }
+
+  Future<dynamic> _performPost(
+    String path,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  ) async {
+    final options = _createOptions(token);
+
+    if (path == ApiEndpoints.login) {
+      final loginData = data as Map<String, dynamic>;
+      if (loginData['email'] == 'test@example.com' &&
+          loginData['password'] == 'password123') {
+        await Future.delayed(const Duration(milliseconds: 500));
+        return mockLoginResponse;
+      } else {
+        throw ServerException(
+          message: 'Invalid credentials',
+          code: 'INVALID_CREDS',
+        );
       }
-
-      if (path == ApiEndpoints.login) {
-        final loginData = data as Map<String, dynamic>;
-        if (loginData['email'] == 'test@example.com' &&
-            loginData['password'] == 'password123') {
-          await Future.delayed(const Duration(milliseconds: 500));
-          return mockLoginResponse;
-        } else {
-          throw ServerException(
-            message: 'Invalid credentials',
-            code: 'INVALID_CREDS',
-          );
-        }
-      }
-
-      final response = await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-
-      return response.data;
-    } catch (e) {
-      _handleException(e);
     }
+
+    final response = await _dio.post(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    );
+
+    return response.data;
   }
 
   Future<dynamic> put(
@@ -100,24 +124,31 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     String? token,
+    bool retryOnError = true,
   }) async {
-    try {
-      final options = Options();
-      if (token != null) {
-        options.headers?['Authorization'] = 'Bearer $token';
-      }
+    return _executeWithRetry(
+      () => _performPut(path, data, queryParameters, token),
+      retryOnError: retryOnError,
+      path: path,
+    );
+  }
 
-      final response = await _dio.put(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
+  Future<dynamic> _performPut(
+    String path,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  ) async {
+    final options = _createOptions(token);
 
-      return response.data;
-    } catch (e) {
-      _handleException(e);
-    }
+    final response = await _dio.put(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    );
+
+    return response.data;
   }
 
   Future<dynamic> delete(
@@ -125,24 +156,64 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     String? token,
+    bool retryOnError = true,
   }) async {
-    try {
-      final options = Options();
-      if (token != null) {
-        options.headers?['Authorization'] = 'Bearer $token';
+    return _executeWithRetry(
+      () => _performDelete(path, data, queryParameters, token),
+      retryOnError: retryOnError,
+      path: path,
+    );
+  }
+
+  Future<dynamic> _performDelete(
+    String path,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    String? token,
+  ) async {
+    final options = _createOptions(token);
+
+    final response = await _dio.delete(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    );
+
+    return response.data;
+  }
+
+  Future<dynamic> _executeWithRetry(
+    Future<dynamic> Function() request, {
+    required bool retryOnError,
+    required String path,
+  }) async {
+    int retryCount = 0;
+
+    while (retryCount < _maxRetries) {
+      try {
+        return await request();
+      } catch (error, stackTrace) {
+        final exception = ErrorHandler.handle(error, stackTrace);
+
+        if (!retryOnError ||
+            !exception.isRetryable ||
+            retryCount >= _maxRetries - 1) {
+          throw exception;
+        }
+
+        retryCount++;
+        await Future.delayed(exception.retryDelay * (retryCount + 1));
       }
-
-      final response = await _dio.delete(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-
-      return response.data;
-    } catch (e) {
-      _handleException(e);
     }
+  }
+
+  Options _createOptions(String? token) {
+    final options = Options();
+    if (token != null) {
+      options.headers?['Authorization'] = 'Bearer $token';
+    }
+    return options;
   }
 
   dynamic _getMockData(String path) {
@@ -172,61 +243,7 @@ class DioClient {
     handler.next(error);
   }
 
-  void _handleException(dynamic error) {
-    if (error is DioException) {
-      if (error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.receiveTimeout ||
-          error.type == DioExceptionType.sendTimeout) {
-        throw NetworkException(
-          message: 'Connection timeout',
-          code: 'TIMEOUT',
-          originalError: error,
-        );
-      } else if (error.response?.statusCode == 401) {
-        throw AuthException(
-          message: 'Unauthorized',
-          code: 'UNAUTHORIZED',
-          originalError: error,
-        );
-      } else if (error.response?.statusCode == 403) {
-        throw AuthException(
-          message: 'Forbidden',
-          code: 'FORBIDDEN',
-          originalError: error,
-        );
-      } else if (error.response?.statusCode == 404) {
-        throw ServerException(
-          message: 'Not found',
-          code: 'NOT_FOUND',
-          originalError: error,
-        );
-      } else if (error.response?.statusCode == 500) {
-        throw ServerException(
-          message: 'Server error',
-          code: 'SERVER_ERROR',
-          originalError: error,
-        );
-      } else if (error.type == DioExceptionType.unknown) {
-        throw NetworkException(
-          message: 'No internet connection',
-          code: 'NO_INTERNET',
-          originalError: error,
-        );
-      } else {
-        throw ServerException(
-          message: error.message ?? 'Unknown error',
-          code: 'UNKNOWN',
-          originalError: error,
-        );
-      }
-    } else if (error is AppException) {
-      throw error;
-    } else {
-      throw ServerException(
-        message: 'Unexpected error',
-        code: 'UNEXPECTED',
-        originalError: error,
-      );
-    }
+  void cancel() {
+    _dio.close();
   }
 }

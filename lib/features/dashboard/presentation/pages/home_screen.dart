@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coredesk/core/colors/app_colors.dart';
-import 'package:coredesk/shared/widgets/widgets.dart';
-import 'package:coredesk/shared/widgets/error_widget.dart' as app_error;
+import 'package:coredesk/core/responsive/responsive_extensions.dart';
+import 'package:coredesk/shared/widgets/responsive_widgets.dart';
+import 'package:coredesk/shared/widgets/error_widgets.dart' as error_ui;
 import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_state.dart';
-import 'package:coredesk/features/dashboard/presentation/helpers/responsive_helpers.dart';
 import 'package:coredesk/features/dashboard/presentation/widgets/enhanced_greeting_card.dart';
 import 'package:coredesk/features/dashboard/presentation/widgets/stats_grid.dart';
 import 'package:coredesk/features/attendance/presentation/widgets/attendance_card.dart';
@@ -41,13 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.surfaceColor,
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.borderRadiusLarge),
+        ),
+        child: ResponsivePaddingContainer(
+          customPadding: EdgeInsets.all(context.cardPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -56,32 +54,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     'Notifications',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.adaptiveFont.titleLarge(),
+                    ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close),
+                    icon: Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              _buildNotificationItem(context, Icons.check_circle, 'Attendance Marked', 'Your attendance was marked today', AppColors.successColor),
-              const SizedBox(height: 12),
-              _buildNotificationItem(context, Icons.info, 'Leave Request Approved', 'Your leave request has been approved', AppColors.infoColor),
-              const SizedBox(height: 12),
-              _buildNotificationItem(context, Icons.calendar_today, 'Holiday Reminder', 'Tomorrow is a public holiday', AppColors.warningColor),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                ),
+              SizedBox(height: context.elementSpacing),
+              _buildNotificationItem(
+                context,
+                Icons.check_circle,
+                'Attendance Marked',
+                'Your attendance was marked today',
+                AppColors.successColor,
+              ),
+              SizedBox(height: context.elementSpacing),
+              _buildNotificationItem(
+                context,
+                Icons.info,
+                'Leave Request Approved',
+                'Your leave request has been approved',
+                AppColors.infoColor,
+              ),
+              SizedBox(height: context.elementSpacing),
+              _buildNotificationItem(
+                context,
+                Icons.calendar_today,
+                'Holiday Reminder',
+                'Tomorrow is a public holiday',
+                AppColors.warningColor,
+              ),
+              SizedBox(height: context.sectionSpacing),
+              ResponsiveButton(
+                label: 'Close',
+                onPressed: () => Navigator.pop(context),
               ),
             ],
           ),
@@ -90,21 +101,47 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNotificationItem(BuildContext context, IconData icon, String title, String subtitle, Color color) {
+  Widget _buildNotificationItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-          child: Icon(icon, color: color, size: 20),
+          padding: EdgeInsets.all(context.responsive.verticalPadding()),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(context.borderRadiusMedium),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: context.responsive.iconSizeSmall(),
+          ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: context.elementSpacing),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-              Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: context.adaptiveFont.bodyMedium(),
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: context.adaptiveFont.bodySmall(),
+                ),
+              ),
             ],
           ),
         ),
@@ -112,31 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: AppColors.primaryColor, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                ),
-          ),
-        ],
-      ),
-    );
+  Widget _buildSectionTitle(BuildContext context, String title, IconData icon) {
+    return ResponsiveSection(title: title, child: SizedBox.shrink());
   }
 
   @override
@@ -144,100 +158,155 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
         if (state is DashboardLoading) {
-          final horizontalPadding = ResponsivePadding.getHorizontalPadding(MediaQuery.of(context).size.width);
-          return SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              horizontalPadding,
-              ResponsivePadding.topPadding,
-              horizontalPadding,
-              ResponsivePadding.bottomPadding + 80,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const LoadingShimmer(height: 104, borderRadius: 24, width: double.infinity),
-                _buildSectionTitle('Overview', Icons.dashboard_rounded),
-                const SizedBox(height: 12),
-                Column(
-                  children: [
-                    const LoadingShimmer(height: 90, borderRadius: 20, width: double.infinity),
-                    const SizedBox(height: 12),
-                    const LoadingShimmer(height: 90, borderRadius: 20, width: double.infinity),
-                    const SizedBox(height: 12),
-                    const LoadingShimmer(height: 90, borderRadius: 20, width: double.infinity),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const LoadingShimmer(height: 70, borderRadius: 12, width: double.infinity),
-                const SizedBox(height: 12),
-                const LoadingShimmer(height: 70, borderRadius: 12, width: double.infinity),
-                const SizedBox(height: 12),
-                const LoadingShimmer(height: 70, borderRadius: 12, width: double.infinity),
-              ],
-            ),
-          );
+          return _buildLoadingState(context);
         } else if (state is DashboardSuccess) {
-          final horizontalPadding = ResponsivePadding.getHorizontalPadding(MediaQuery.of(context).size.width);
+          return _buildSuccessState(context, state);
+        } else if (state is DashboardError) {
+          return _buildErrorState(context, state);
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<DashboardBloc>().add(RefreshDashboardEvent(widget.token));
-            },
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: EdgeInsets.fromLTRB(
-                horizontalPadding,
-                ResponsivePadding.topPadding,
-                horizontalPadding,
-                ResponsivePadding.bottomPadding + 80,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EnhancedGreetingCard(
-                    userName: 'Saurabh',
-                    onProfileTap: () {},
-                    onNotificationsTap: () => _showNotificationsDialog(context),
-                  ),
-                  _buildSectionTitle('Overview', Icons.dashboard_rounded),
-                  const SizedBox(height: 12),
+  Widget _buildLoadingState(BuildContext context) {
+    return SingleChildScrollView(
+      padding: context.screenPadding.copyWith(
+        bottom: context.screenPadding.bottom + 80,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(context.borderRadiusLarge),
+            ),
+          ),
+          SizedBox(height: context.sectionSpacing),
+          Text(
+            'Overview',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontSize: context.adaptiveFont.titleLarge(),
+            ),
+          ),
+          SizedBox(height: context.elementSpacing),
+          _buildShimmerCards(context, 3),
+        ],
+      ),
+    );
+  }
 
-                  StatsGrid(
-                    attendanceCount: state.stats.attendance,
-                    leavesCount: state.stats.leaves,
-                    requestsCount: state.stats.requests,
-                  ),
-                  const SizedBox(height: 16),
-                  ExpandableCard(
-                    title: 'Recent Leaves',
-                    isExpanded: false,
-                    child: state.leaves.isEmpty
-                        ? const EmptyStateWidget(title: 'No leaves', subtitle: 'You have no leave records', icon: Icons.beach_access)
-                        : Column(children: state.leaves.take(3).map((leave) => LeaveCard(leave: leave)).toList()),
-                  ),
-                  ExpandableCard(
-                    title: 'Upcoming Holidays',
-                    isExpanded: false,
-                    child: state.holidays.isEmpty
-                        ? const EmptyStateWidget(title: 'No holidays', subtitle: 'No upcoming holidays', icon: Icons.calendar_today)
-                        : Column(children: state.holidays.take(3).map((holiday) => HolidayCard(holiday: holiday)).toList()),
-                  ),
-                  ExpandableCard(
-                    title: 'Recent Attendance',
-                    isExpanded: false,
-                    child: state.attendance.isEmpty
-                        ? const EmptyStateWidget(title: 'No records', subtitle: 'No attendance records', icon: Icons.history)
-                        : Column(children: state.attendance.take(3).map((att) => AttendanceCard(attendance: att)).toList()),
-                  ),
-                ],
+  Widget _buildShimmerCards(BuildContext context, int count) {
+    return Column(
+      children: List.generate(
+        count,
+        (index) => Padding(
+          padding: EdgeInsets.only(bottom: context.elementSpacing),
+          child: Container(
+            height: 90,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(context.borderRadiusMedium),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSuccessState(BuildContext context, DashboardSuccess state) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<DashboardBloc>().add(RefreshDashboardEvent(widget.token));
+      },
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        padding: context.screenPadding.copyWith(
+          bottom: context.screenPadding.bottom + 80,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            EnhancedGreetingCard(
+              userName: 'Saurabh',
+              onProfileTap: () {},
+              onNotificationsTap: () => _showNotificationsDialog(context),
+            ),
+            SizedBox(height: context.sectionSpacing),
+            ResponsiveSection(
+              title: 'Overview',
+              child: StatsGrid(
+                attendanceCount: state.stats.attendance,
+                leavesCount: state.stats.leaves,
+                requestsCount: state.stats.requests,
               ),
             ),
-          );
-        } else if (state is DashboardError) {
-          return app_error.ErrorWidget(message: state.message, onRetry: () {});
-        }
-        return const SizedBox.shrink();
-      },
+            SizedBox(height: context.sectionSpacing),
+            ResponsiveSection(
+              title: 'Recent Leaves',
+              child: state.leaves.isEmpty
+                  ? EmptyStateWidget(
+                      title: 'No leaves',
+                      subtitle: 'You have no leave records',
+                    )
+                  : Column(
+                      children: state.leaves
+                          .take(3)
+                          .map((leave) => LeaveCard(leave: leave))
+                          .toList(),
+                    ),
+            ),
+            SizedBox(height: context.sectionSpacing),
+            ResponsiveSection(
+              title: 'Upcoming Holidays',
+              child: state.holidays.isEmpty
+                  ? EmptyStateWidget(
+                      title: 'No holidays',
+                      subtitle: 'No upcoming holidays',
+                    )
+                  : Column(
+                      children: state.holidays
+                          .take(3)
+                          .map((holiday) => HolidayCard(holiday: holiday))
+                          .toList(),
+                    ),
+            ),
+            SizedBox(height: context.sectionSpacing),
+            ResponsiveSection(
+              title: 'Recent Attendance',
+              child: state.attendance.isEmpty
+                  ? EmptyStateWidget(
+                      title: 'No records',
+                      subtitle: 'No attendance records',
+                    )
+                  : Column(
+                      children: state.attendance
+                          .take(3)
+                          .map((att) => AttendanceCard(attendance: att))
+                          .toList(),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, DashboardError state) {
+    return Center(
+      child: Padding(
+        padding: context.screenPadding,
+        child: ErrorWidget(
+          error: state.exception,
+          onRetry: () {
+            context.read<DashboardBloc>().add(
+              RefreshDashboardEvent(widget.token),
+            );
+          },
+        ),
+      ),
     );
   }
 }
