@@ -60,35 +60,46 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 
 ## 📸 Screenshots
 
-> **Add screenshots here to showcase the application UI**
-
 ### 1. **Authentication Screen**
+![Authentication Screen](screenshots/screenshot1.jpeg)
    - Email/Password login with validation
    - Error handling and user feedback
    - Password visibility toggle
 
-### 2. **Dashboard Screen**
+---
+
+### 2. **Dashboard Home Screen**
+![Dashboard Home Screen](screenshots/homescreen.jpeg)
    - Overview statistics (Attendance, Leaves, Requests)
    - Greeting card with user information
    - Recent leaves list with expandable view
    - Upcoming holidays calendar
    - Pull-to-refresh functionality
 
+---
+
 ### 3. **Leaves Management Screen**
+![Leaves Management Screen](screenshots/leaveScreen.jpeg)
    - List of all leaves with pagination (20+ entries)
    - Leave status indicators (Approved, Pending, Rejected)
    - Apply new leave functionality
    - Leave details and history
    - Filter by status
 
+---
+
 ### 4. **Attendance Screen**
+![Attendance Screen](screenshots/attendanceScreen.jpeg)
    - Daily attendance records with pagination (20+ entries)
    - Check-in/check-out times
    - Work hours calculation
    - Location details (Office, Remote, Client Site)
    - Attendance status (Present, Absent, Half Day)
 
+---
+
 ### 5. **Profile Screen**
+![Profile Screen](screenshots/profileScreen.jpeg)
    - Employee information display
    - Department and role details
    - Contact information
