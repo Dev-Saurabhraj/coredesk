@@ -1,6 +1,6 @@
-# 🎯 CoreDesk - Enterprise HR Management Application
+# 🎯 CoreDesk - Employee Dashboard Application
 
-> A production-ready Flutter application for comprehensive HR management including attendance tracking, leave management, and employee profiles with an elegant, responsive design system.
+> A modern, responsive Flutter application that provides employees with a personalized dashboard to track their attendance, manage leave requests, view company holidays, and manage their profile information.
 
 **Version:** 1.0.0  
 **Status:** Production Ready  
@@ -20,8 +20,6 @@
 - [📱 Responsive Design](#-responsive-design)
 - [🔑 Key Architectural Decisions](#-key-architectural-decisions)
 - [📂 Project Structure](#-project-structure)
-- [🧠 Application Logic](#-application-logic)
-- [⚙️ Configuration & Setup](#-configuration--setup)
 - [📊 State Management](#-state-management)
 - [🌐 API Integration](#-api-integration)
 - [🎯 Development Guidelines](#-development-guidelines)
@@ -31,16 +29,16 @@
 
 ## 📖 Project Overview
 
-**CoreDesk** is an enterprise-grade HR management mobile application built with **Flutter**, designed to streamline employee workflows through intuitive interfaces and robust functionality. The application follows **Clean Architecture** principles with clear separation between presentation, domain, and data layers, ensuring maintainability, scalability, and testability.
+**CoreDesk** is a modern, user-friendly Employee Dashboard application built with **Flutter**, designed to give employees easy access to their work-related information in one place. The application follows **Clean Architecture** principles with clear separation between presentation, domain, and data layers, ensuring maintainability, scalability, and testability.
 
 ### What is CoreDesk?
 
-CoreDesk is a comprehensive solution for HR teams and employees to manage:
-- **Attendance Tracking** - Check-in/check-out with location tracking and work hours calculation
-- **Leave Management** - Apply, approve, and track different types of leaves with status updates
-- **Holiday Calendar** - View organizational holidays and upcoming celebrations
-- **Dashboard Analytics** - Quick overview of attendance, leave balance, and pending requests
-- **Employee Profile** - Manage personal information and view organizational details
+CoreDesk is a comprehensive employee-centric dashboard application that allows employees to:
+- **View Attendance Records** - Check daily attendance history, check-in/check-out times, and work hours
+- **Manage Leave Requests** - Apply for leaves, track approval status, and view leave history
+- **View Company Holidays** - See upcoming organizational holidays and celebration dates
+- **Personal Dashboard** - Quick overview of attendance summary, leave balance, and pending requests
+- **Profile Management** - Manage personal information and view employee details
 
 ### Key Highlights
 
@@ -50,7 +48,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 | **Supported Platforms** | Android, iOS, Web, Windows, macOS, Linux |
 | **Architecture Pattern** | Clean Architecture + BLoC |
 | **State Management** | Flutter BLoC with pagination |
-| **API Integration** | Real-time data with pagination support |
+| **Data Display** | Pagination support for large datasets |
 | **Error Handling** | Comprehensive exception hierarchy with retry logic |
 | **UI Framework** | Material Design 3 |
 | **Code Organization** | Feature-based modular architecture |
@@ -123,7 +121,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 > - [Firebase App Distribution](https://firebase.google.com/docs/app-distribution)
 >
 > **APK Specifications:**
-> - Size: ~50-80 MB
+> - Size: ~50 MB
 > - Minimum Android Version: 5.0 (API 21)
 > - Target Android Version: 14 (API 34)
 
@@ -388,48 +386,49 @@ coredesk/
 ## 🎨 Key Features
 
 ### 1. **Dashboard Overview** 📊
-- Real-time attendance statistics
-- Leave balance overview
-- Pending requests count
-- Recent activities summary
-- Pull-to-refresh
-- Expandable sections
+- Personal attendance summary
+- Leave balance and statistics
+- Pending leave requests
+- Recent activities overview
+- Pull-to-refresh functionality
+- Quick navigation to detailed views
 
-### 2. **Attendance Management** ⏰
-- Daily check-in/check-out tracking
-- Location-based attendance
-- Work hours calculation
-- **Pagination support (20+ entries)**
-- Status indicators (Present, Absent, Half Day)
-- Attendance history
+### 2. **Attendance Records** ⏰
+- ✅ View daily attendance history
+- 📍 Location information (Office/Remote/Client Site)
+- ⏰ Check-in and check-out times
+- 📊 Work hours calculation
+- **Pagination support (20+ records)**
+- 🔍 Status display (Present, Absent, Half Day, Leave)
 
 ### 3. **Leave Management** 📝
-- Apply new leaves
-- Track leave status (Approved, Pending, Rejected)
-- Multiple leave types support
-- Approval tracking
+- 📋 View all leave records
+- ✅ Track leave status (Approved, Pending, Rejected)
+- 📅 Multiple leave types (Casual, Sick, Earned, Maternity, Paternity, etc.)
+- 👤 Approval information
 - **Pagination support (20+ entries)**
-- Leave history and balance
+- 📊 Leave history and details
 
-### 4. **Holiday Calendar** 🎉
-- Organization-wide holidays
-- Holiday dates and information
-- Upcoming events view
-- Location-specific holidays
+### 4. **Company Holidays** 🎉
+- 📅 View all organizational holidays
+- 🎪 Holiday names and dates
+- 📍 Location-specific holidays
+- 🔔 Holiday reminders
 
 ### 5. **User Authentication** 🔐
-- Email/Password login
-- Input validation
-- Error handling
-- Token management
-- Secure logout
+- 🔐 Secure email/password login
+- ✔️ Input validation and error handling
+- 📧 Remember me functionality
+- 🔓 Logout with session cleanup
+- 🛡️ Token-based authentication
 
 ### 6. **Employee Profile** 👤
-- Personal information
-- Department & role
-- Contact details
-- Edit capabilities
-- Avatar display
+- 👤 Personal information display
+- 🏢 Department and designation details
+- 📞 Contact information
+- 📸 Profile picture/Avatar
+- ✏️ Edit profile capability
+- 🔔 Account preferences
 
 ---
 
@@ -476,60 +475,57 @@ if (context.isMediumScreen) {
 **Decision:** Implement three-layer architecture (Presentation, Domain, Data)
 
 **Rationale:**
-- Clear separation of concerns
-- Easy unit testing
-- Framework independence
-- Scalability
-- Team collaboration
+- Clear separation of concerns - UI, business logic, and data handling are kept separate
+- Easy to unit test - Each layer can be tested independently
+- Framework independence - Business logic doesn't depend on Flutter
+- Scalability - Easy to add new features without affecting existing code
+- Team collaboration - Different developers can work on different layers
 
 **Implementation:**
 - Features as independent modules
 - Repository pattern for data abstraction
-- BLoC for state management
+- BLoC for state management separated from UI
 - No cross-feature imports
 
 ---
 
 ### 2. **BLoC Pattern for State Management**
-**Decision:** Use Flutter BLoC/Cubit instead of Provider or GetX
+**Decision:** Use Flutter BLoC for state management
 
 **Rationale:**
-- Reactive programming model
-- Predictable state transitions
-- Excellent for complex features (pagination, filters)
-- Strong community support
-- Easy debugging with observer
+- Reactive programming model - Changes automatically propagate to UI
+- Predictable state transitions - Events lead to specific state changes
+- Excellent for complex features - Pagination, filtering, loading states
+- Strong community support - Well-documented and widely used
+- Easy debugging - Can track all state changes
 
-**Implementation:**
+**Real-world Example - Pagination:**
 ```dart
-class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final DashboardRepository repository;
-  
-  DashboardBloc({required this.repository}) : super(DashboardInitial()) {
-    on<FetchDashboardDataEvent>(_onFetchData);
-    on<LoadMoreLeavesEvent>(_onLoadMoreLeaves);
-  }
-}
+// User scrolls to end of list
+event: LoadMoreLeavesEvent()
+→ BLoC fetches next page
+→ State updates with new leaves + pagination flags
+→ UI rebuilds with more data
 ```
 
 ---
 
 ### 3. **Dio with Retry Logic**
-**Decision:** Implement automatic retry mechanism for failed requests
+**Decision:** Implement automatic retry mechanism for failed API requests
 
 **Rationale:**
-- Handle transient network failures
-- Exponential backoff strategy
-- Better user experience
-- Configurable retry behavior
-- Reduces manual retry code
+- Handle transient network failures gracefully
+- Exponential backoff strategy prevents server overload
+- Better user experience - Silent recovery from temporary issues
+- Configurable retry behavior per endpoint
+- Reduces manual error handling code
 
 **Configuration:**
-- Max 3 retries per request
-- Exponential backoff delay
-- Retryable status codes: 408, 429, 5xx
-- Connection timeout: 15s
-- Receive timeout: 30s
+- Maximum 3 retries per request
+- Exponential backoff: 1s, 2s, 4s delays
+- Retryable status codes: 408, 429, 500, 502, 503, 504
+- Connection timeout: 15 seconds
+- Receive timeout: 30 seconds
 
 ---
 
@@ -537,17 +533,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 **Decision:** Build custom responsive utilities instead of using third-party packages
 
 **Rationale:**
-- Perfect control over breakpoints
-- No external dependencies
-- Consistent design language
-- Easy to extend
-- Better performance
+- Perfect control over breakpoints matching app design
+- No unnecessary external dependencies
+- Consistent design language across app
+- Easy to extend and customize
+- Better performance without extra packages
 
 **Implementation:**
 - ResponsiveSystem class with device detection
-- Context extensions for easy access
-- Adaptive font sizing
-- Dynamic padding/margins
+- Context extensions for easy access throughout app
+- Adaptive font sizing for readability
+- Dynamic padding/margins for different screens
 
 ---
 
@@ -555,15 +551,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 **Decision:** Include comprehensive mock data (20+ entries) for pagination testing
 
 **Rationale:**
-- Test pagination without backend
-- Verify UI at different data volumes
-- Catch performance issues early
-- Documentation through examples
+- Test pagination and list behavior without backend
+- Verify UI works correctly with large datasets
+- Catch performance issues early in development
+- Serves as documentation through examples
 
 **Coverage:**
-- 20 leave entries (various types & statuses)
+- 20 leave entries with various types and statuses
 - 20 holiday entries
-- 20 attendance records
+- 20 attendance records with different scenarios
 
 ---
 
@@ -571,11 +567,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 **Decision:** Abstract data sources with repositories and use GetIt for DI
 
 **Rationale:**
-- Swap implementations easily
-- Better testability
-- Single responsibility principle
-- Loose coupling
-- Clear dependencies
+- Swap implementations easily (real API vs mock data)
+- Better testability - Can inject mock repositories in tests
+- Single responsibility principle - Each class has one job
+- Loose coupling - Components don't know about concrete implementations
+- Clear dependencies - Easy to see what each feature needs
 
 **Implementation:**
 ```dart
@@ -590,21 +586,21 @@ getIt.registerSingleton<LeaveRepository>(
 ---
 
 ### 7. **Feature-Based Code Organization**
-**Decision:** Organize code by features rather than by layer
+**Decision:** Organize code by features rather than by layers
 
 **Rationale:**
-- Feature independence
-- Easy to add/remove features
-- Clear module boundaries
-- Faster navigation
-- Team scalability
+- Feature independence - Each feature is a self-contained module
+- Easy to add/remove features - Just add/delete a folder
+- Clear module boundaries - No ambiguity about where code belongs
+- Faster navigation - All related code in one place
+- Team scalability - Teams can own specific features
 
 **Structure:**
 ```
 feature/
-├── data/
-├── domain/
-└── presentation/
+├── data/          (Network calls, models)
+├── domain/        (Business logic, entities)
+└── presentation/  (UI, state management)
 ```
 
 ---
