@@ -61,7 +61,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ## 📸 Screenshots
 
 ### 1. **Authentication Screen**
-<img src="screenshots/screenshot1.jpeg" alt="Authentication Screen" width="300"/>
+<img src="screenshots/screenshot1.jpeg" alt="Authentication Screen" width="250"/>
 
    - Email/Password login with validation
    - Error handling and user feedback
@@ -70,7 +70,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 2. **Dashboard Home Screen**
-<img src="screenshots/homescreen.jpeg" alt="Dashboard Home Screen" width="300"/>
+<img src="screenshots/homescreen.jpeg" alt="Dashboard Home Screen" width="250"/>
 
    - Overview statistics (Attendance, Leaves, Requests)
    - Greeting card with user information
@@ -81,7 +81,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 3. **Leaves Management Screen**
-<img src="screenshots/leaveScreen.jpeg" alt="Leaves Management Screen" width="300"/>
+<img src="screenshots/leaveScreen.jpeg" alt="Leaves Management Screen" width="250"/>
 
    - List of all leaves with pagination (20+ entries)
    - Leave status indicators (Approved, Pending, Rejected)
@@ -92,7 +92,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 4. **Attendance Screen**
-<img src="screenshots/attendanceScreen.jpeg" alt="Attendance Screen" width="300"/>
+<img src="screenshots/attendanceScreen.jpeg" alt="Attendance Screen" width="250"/>
 
    - Daily attendance records with pagination (20+ entries)
    - Check-in/check-out times
@@ -103,7 +103,7 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 5. **Profile Screen**
-<img src="screenshots/profileScreen.jpeg" alt="Profile Screen" width="300"/>
+<img src="screenshots/profileScreen.jpeg" alt="Profile Screen" width="250"/>
 
    - Employee information display
    - Department and role details
@@ -114,9 +114,9 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 
 ## 📥 APK Download
 
-> **Paste your APK Google Drive link here:**
+> **Download CoreDesk APK:**
 >
-> # [📱 Download CoreDesk APK v1.0.0](https://drive.google.com/your-apk-link-here)
+> # [📱 Download CoreDesk APK v1.0.0](https://drive.google.com/file/d/1TEAfXEbrGJSARfgzaTo63Aw2izjYytVQ/view?usp=drive_link)
 >
 > **Alternative Distribution:**
 > - [GitHub Releases](https://github.com/Dev-Saurabhraj/coredesk/releases)
