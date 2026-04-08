@@ -61,7 +61,8 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ## 📸 Screenshots
 
 ### 1. **Authentication Screen**
-![Authentication Screen](screenshots/screenshot1.jpeg)
+<img src="screenshots/screenshot1.jpeg" alt="Authentication Screen" width="300"/>
+
    - Email/Password login with validation
    - Error handling and user feedback
    - Password visibility toggle
@@ -69,7 +70,8 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 2. **Dashboard Home Screen**
-![Dashboard Home Screen](screenshots/homescreen.jpeg)
+<img src="screenshots/homescreen.jpeg" alt="Dashboard Home Screen" width="300"/>
+
    - Overview statistics (Attendance, Leaves, Requests)
    - Greeting card with user information
    - Recent leaves list with expandable view
@@ -79,7 +81,8 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 3. **Leaves Management Screen**
-![Leaves Management Screen](screenshots/leaveScreen.jpeg)
+<img src="screenshots/leaveScreen.jpeg" alt="Leaves Management Screen" width="300"/>
+
    - List of all leaves with pagination (20+ entries)
    - Leave status indicators (Approved, Pending, Rejected)
    - Apply new leave functionality
@@ -89,7 +92,8 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 4. **Attendance Screen**
-![Attendance Screen](screenshots/attendanceScreen.jpeg)
+<img src="screenshots/attendanceScreen.jpeg" alt="Attendance Screen" width="300"/>
+
    - Daily attendance records with pagination (20+ entries)
    - Check-in/check-out times
    - Work hours calculation
@@ -99,7 +103,8 @@ CoreDesk is a comprehensive solution for HR teams and employees to manage:
 ---
 
 ### 5. **Profile Screen**
-![Profile Screen](screenshots/profileScreen.jpeg)
+<img src="screenshots/profileScreen.jpeg" alt="Profile Screen" width="300"/>
+
    - Employee information display
    - Department and role details
    - Contact information
