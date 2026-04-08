@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_event.dart';
+import 'package:coredesk/features/dashboard/presentation/index.dart';
 import 'package:coredesk/shared/widgets/app_bottom_navigation_bar.dart'
     show BottomNavItem, AppBottomNavigationBar;
-import 'package:coredesk/features/dashboard/presentation/pages/home_screen.dart';
-import 'package:coredesk/features/leaves/presentation/pages/leaves_screen.dart';
-import 'package:coredesk/features/attendance/presentation/pages/attendance_screen.dart';
-import 'package:coredesk/features/dashboard/presentation/pages/profile_screen.dart';
+import 'package:coredesk/features/leaves/presentation/index.dart';
+import 'package:coredesk/features/attendance/presentation/index.dart';
+
 
 class DashboardPage extends StatefulWidget {
   final String token;
@@ -33,10 +31,6 @@ class _DashboardPageState extends State<DashboardPage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  void _handleRefresh() {
-    context.read<DashboardBloc>().add(RefreshDashboardEvent(widget.token));
   }
 
   void _onNavItemTapped(BottomNavItem item) {

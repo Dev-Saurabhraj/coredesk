@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// Helper class for managing responsive breakpoints and sizing
 class ResponsiveBreakpoints {
   static const double extraSmallPhones = 360;

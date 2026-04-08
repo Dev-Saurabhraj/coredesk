@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
-import 'package:coredesk/core/responsive/responsive_extensions.dart';
-import 'package:coredesk/shared/widgets/responsive_widgets.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/shared/widgets/error_widgets.dart' as error_ui;
-import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_state.dart';
-import 'package:coredesk/features/dashboard/presentation/widgets/enhanced_greeting_card.dart';
-import 'package:coredesk/features/dashboard/presentation/widgets/stats_grid.dart';
-import 'package:coredesk/features/attendance/presentation/widgets/attendance_card.dart';
-import '../bloc/dashboard_event.dart';
-import '../widgets/holiday_card.dart';
-import 'package:coredesk/features/leaves/presentation/widgets/leave_card.dart';
+import 'package:coredesk/shared/widgets/responsive_widgets.dart';
+import 'package:coredesk/features/dashboard/presentation/index.dart';
+import 'package:coredesk/features/attendance/presentation/index.dart';
+import 'package:coredesk/features/leaves/presentation/index.dart';
 
 class HomeScreen extends StatefulWidget {
   final String token;
@@ -24,6 +18,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late ScrollController _scrollController;
+  bool _expandedLeaves = false;
+  bool _expandedHolidays = false;
+  bool _expandedAttendance = false;
 
   @override
   void initState() {
@@ -38,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showNotificationsDialog(BuildContext context) {
+    HapticsService.lightTap();
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -61,7 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   IconButton(
                     icon: Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      HapticsService.lightTap();
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
@@ -147,10 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
-  }
-
-  Widget _buildSectionTitle(BuildContext context, String title, IconData icon) {
-    return ResponsiveSection(title: title, child: SizedBox.shrink());
   }
 
   @override
@@ -246,46 +243,91 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: context.sectionSpacing),
             ResponsiveSection(
               title: 'Recent Leaves',
+              onViewMore: _expandedLeaves && state.leaves.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedLeaves = false);
+                    }
+                  : state.leaves.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedLeaves = true);
+                    }
+                  : null,
               child: state.leaves.isEmpty
-                  ? EmptyStateWidget(
+                  ? error_ui.EmptyStateWidget(
                       title: 'No leaves',
                       subtitle: 'You have no leave records',
                     )
                   : Column(
-                      children: state.leaves
-                          .take(3)
-                          .map((leave) => LeaveCard(leave: leave))
-                          .toList(),
+                      children: _expandedLeaves
+                          ? state.leaves
+                                .map((leave) => LeaveCard(leave: leave))
+                                .toList()
+                          : state.leaves
+                                .take(1)
+                                .map((leave) => LeaveCard(leave: leave))
+                                .toList(),
                     ),
             ),
             SizedBox(height: context.sectionSpacing),
             ResponsiveSection(
               title: 'Upcoming Holidays',
+              onViewMore: _expandedHolidays && state.holidays.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedHolidays = false);
+                    }
+                  : state.holidays.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedHolidays = true);
+                    }
+                  : null,
               child: state.holidays.isEmpty
-                  ? EmptyStateWidget(
+                  ? error_ui.EmptyStateWidget(
                       title: 'No holidays',
                       subtitle: 'No upcoming holidays',
                     )
                   : Column(
-                      children: state.holidays
-                          .take(3)
-                          .map((holiday) => HolidayCard(holiday: holiday))
-                          .toList(),
+                      children: _expandedHolidays
+                          ? state.holidays
+                                .map((holiday) => HolidayCard(holiday: holiday))
+                                .toList()
+                          : state.holidays
+                                .take(1)
+                                .map((holiday) => HolidayCard(holiday: holiday))
+                                .toList(),
                     ),
             ),
             SizedBox(height: context.sectionSpacing),
             ResponsiveSection(
               title: 'Recent Attendance',
+              onViewMore: _expandedAttendance && state.attendance.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedAttendance = false);
+                    }
+                  : state.attendance.length > 1
+                  ? () {
+                      HapticsService.lightTap();
+                      setState(() => _expandedAttendance = true);
+                    }
+                  : null,
               child: state.attendance.isEmpty
-                  ? EmptyStateWidget(
+                  ? error_ui.EmptyStateWidget(
                       title: 'No records',
                       subtitle: 'No attendance records',
                     )
                   : Column(
-                      children: state.attendance
-                          .take(3)
-                          .map((att) => AttendanceCard(attendance: att))
-                          .toList(),
+                      children: _expandedAttendance
+                          ? state.attendance
+                                .map((att) => AttendanceCard(attendance: att))
+                                .toList()
+                          : state.attendance
+                                .take(1)
+                                .map((att) => AttendanceCard(attendance: att))
+                                .toList(),
                     ),
             ),
           ],
@@ -298,8 +340,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Center(
       child: Padding(
         padding: context.screenPadding,
-        child: ErrorWidget(
-          error: state.exception,
+        child: error_ui.ErrorWidget(
+          error: UnknownException(message: state.message),
           onRetry: () {
             context.read<DashboardBloc>().add(
               RefreshDashboardEvent(widget.token),

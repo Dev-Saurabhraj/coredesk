@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:coredesk/features/authentication/presentation/pages/login_page.dart';
 import 'package:coredesk/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:coredesk/shared/services/auth_service.dart';
+import 'package:coredesk/shared/services/index.dart';
 
 GoRouter createRouter(AuthService authService) {
   return GoRouter(

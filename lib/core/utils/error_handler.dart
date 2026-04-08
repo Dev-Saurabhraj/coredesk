@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/exceptions/index.dart';
 
 class ErrorHandler {
   static AppException handle(dynamic error, [StackTrace? stackTrace]) {

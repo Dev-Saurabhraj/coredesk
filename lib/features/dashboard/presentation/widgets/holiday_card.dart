@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart'; // Standardized import mapping
 import '../../data/models/holiday_model.dart';
 
 class HolidayCard extends StatelessWidget {
@@ -10,12 +10,19 @@ class HolidayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(context.responsive.verticalPadding()),
+      margin: EdgeInsets.only(bottom: context.elementSpacing),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.secondaryColor.withOpacity(0.3)),
+        color: AppColors.secondaryColor.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(context.borderRadiusMedium),
+        border: Border.all(color: AppColors.secondaryColor.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.secondaryColor.withOpacity(0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,31 +33,47 @@ class HolidayCard extends StatelessWidget {
               children: [
                 Text(
                   holiday.name,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.adaptiveFont.titleSmall(),
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: context.elementSpacing / 2),
                 Row(
                   children: [
                     Icon(
                       Icons.event,
-                      size: 14,
+                      size: context.responsive.iconSizeSmall(),
                       color: AppColors.secondaryColor,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 6),
                     Text(
                       holiday.date,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: context.adaptiveFont.bodySmall(),
+                          ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          Icon(Icons.celebration, color: AppColors.secondaryColor, size: 24),
+          Container(
+            padding: EdgeInsets.all(context.responsive.verticalPadding() * 0.8),
+            decoration: BoxDecoration(
+              color: AppColors.secondaryColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(context.borderRadiusMedium),
+            ),
+            child: Icon(
+              Icons.celebration_rounded,
+              color: AppColors.secondaryColor,
+              size: context.responsive.iconSizeMedium(),
+            ),
+          ),
         ],
       ),
     );

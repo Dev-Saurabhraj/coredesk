@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coredesk/core/responsive/responsive_extensions.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 
 class ResponsivePaddingContainer extends StatelessWidget {
   final Widget child;
@@ -10,13 +9,13 @@ class ResponsivePaddingContainer extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
 
   const ResponsivePaddingContainer({
-    Key? key,
+    super.key,
     required this.child,
     this.customPadding,
     this.alignment = Alignment.topLeft,
     this.backgroundColor,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +55,13 @@ class ResponsiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Card(
       elevation: elevation ?? 1,
-      backgroundColor: backgroundColor ?? Colors.white,
+      color: backgroundColor ?? Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius:
             borderRadius ??
             BorderRadius.circular(context.responsive.borderRadiusMedium()),
         side: border != null
-            ? border!.sides.first
+            ? BorderSide(color: AppColors.borderColor)
             : BorderSide(color: AppColors.borderColor.withOpacity(0.15)),
       ),
       child: Padding(
@@ -72,7 +71,13 @@ class ResponsiveCard extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return GestureDetector(onTap: onTap, child: card);
+      return GestureDetector(
+        onTap: () {
+          HapticsService.lightTap();
+          onTap!();
+        },
+        child: card,
+      );
     }
 
     return card;
@@ -87,13 +92,13 @@ class ResponsiveSection extends StatelessWidget {
   final VoidCallback? onViewMore;
 
   const ResponsiveSection({
-    Key? key,
+    super.key,
     this.title,
     required this.child,
     this.padding,
     this.titleStyle,
     this.onViewMore,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +130,7 @@ class ResponsiveSection extends StatelessWidget {
                     child: Text(
                       'View More',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.primary,
+                        color: AppColors.primaryColor,
                         fontSize: context.adaptiveFont.labelMedium(),
                       ),
                     ),
@@ -173,7 +178,12 @@ class ResponsiveButton extends StatelessWidget {
       width: double.infinity,
       height: minHeight ?? (context.responsive.headerPadding()),
       child: ElevatedButton.icon(
-        onPressed: isLoading || !isEnabled ? null : onPressed,
+        onPressed: isLoading || !isEnabled
+            ? null
+            : () {
+                HapticsService.mediumTap();
+                onPressed();
+              },
         icon: isLoading
             ? SizedBox(
                 height: context.responsive.iconSizeSmall(),
@@ -223,7 +233,12 @@ class ResponsiveListTile extends StatelessWidget {
         Material(
           color: backgroundColor ?? Colors.transparent,
           child: InkWell(
-            onTap: onTap,
+            onTap: onTap != null
+                ? () {
+                    HapticsService.lightTap();
+                    onTap!();
+                  }
+                : null,
             child: Padding(
               padding: EdgeInsets.all(context.responsive.elementSpacing()),
               child: Row(
@@ -250,7 +265,7 @@ class ResponsiveListTile extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: context.adaptiveFont.bodySmall(),
-                                  color: AppColors.onSurfaceVariant,
+                                  color: AppColors.textSecondary,
                                 ),
                           ),
                         ],

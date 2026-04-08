@@ -1,22 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:coredesk/core/constants/app_constants.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/core/network/mock_api_data.dart';
-import 'package:coredesk/core/utils/error_handler.dart';
 
 import '../apiServices/apiEndpoints.dart';
 
 class DioClient {
   late final Dio _dio;
   static const int _maxRetries = 3;
-  static const Map<int, int> _retryStatusCodes = {
-    408: 1,
-    429: 2,
-    500: 3,
-    502: 3,
-    503: 2,
-    504: 2,
-  };
 
   DioClient() {
     _dio = Dio(

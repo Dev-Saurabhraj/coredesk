@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
-import 'package:coredesk/core/styles/app_text_styles.dart';
-import 'package:coredesk/core/icons/app_icons.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/config/dependencies.dart';
 import 'package:coredesk/routes/app_router.dart';
-import 'package:coredesk/shared/services/auth_service.dart';
+import 'package:coredesk/shared/services/index.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 

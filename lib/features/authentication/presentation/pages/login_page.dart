@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:coredesk/core/constants/app_constants.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_state.dart';
-import 'package:svg_flutter/svg.dart';
 import '../../../../core/constants/validation_messages.dart';
 
 class LoginPage extends StatefulWidget {
@@ -135,7 +133,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                     child: _buildDecorativeGlass(300),
                   ),
 
-
                   Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -144,7 +141,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                       ),
                       child: Column(
                         children: [
-
+                          const SizedBox(height: 32),
                           _buildLogo(),
                           const SizedBox(height: 32),
 
@@ -155,10 +152,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                             decoration: BoxDecoration(
                               color: AppColors.surfaceColor,
                               borderRadius: BorderRadius.circular(24),
-                              // Ambient shadow for floating element
+
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF2C2F31).withOpacity(0.06),
+                                  color: const Color(
+                                    0xFF2C2F31,
+                                  ).withOpacity(0.06),
                                   blurRadius: 40,
                                   offset: const Offset(0, 20),
                                 ),
@@ -201,7 +200,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildDecorativeGlass(double size){
+  Widget _buildDecorativeGlass(double size) {
     return Container(
       width: size,
       height: size,
@@ -226,13 +225,14 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   }
 
   Widget _buildLogo() {
-    return Container(
-      width: 120,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Image.asset(
+        'assets/AppLogo/appLogo2.png',
+        fit: BoxFit.fill,
+        width: 120,
+        height: 120,
       ),
-      child: Image.asset('assets/AppLogo/appLogo2.png', fit: BoxFit.fill, width: 80, height: 80,)
     );
   }
 
@@ -396,9 +396,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       children: [
         TextButton(
           style: TextButton.styleFrom(padding: EdgeInsets.zero),
-          onPressed: () {
-
-          },
+          onPressed: () {},
           child: Text(
             'Forgot password?',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -544,7 +542,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
               color: AppColors.primaryColor,
               fontWeight: FontWeight.w700,
               decoration: TextDecoration.underline,
-            )
+            ),
           ),
         ],
       ),

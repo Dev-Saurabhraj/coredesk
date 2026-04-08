@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 
 class StatCard extends StatelessWidget {
   final String title;
@@ -45,7 +45,9 @@ class StatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (iconColor ?? AppColors.primaryColor).withOpacity(0.12),
+                    color: (iconColor ?? AppColors.primaryColor).withOpacity(
+                      0.12,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -62,17 +64,17 @@ class StatCard extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
@@ -81,9 +83,9 @@ class StatCard extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: iconColor ?? AppColors.primaryColor,
-                  fontWeight: FontWeight.w800,
-                ),
+              color: iconColor ?? AppColors.primaryColor,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ],
       ),

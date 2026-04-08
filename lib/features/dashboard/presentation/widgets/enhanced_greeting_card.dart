@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 
 class EnhancedGreetingCard extends StatelessWidget {
   final String userName;

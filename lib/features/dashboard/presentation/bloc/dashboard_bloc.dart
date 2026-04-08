@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/dashboard/domain/usecases/dashboard_use_cases.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';

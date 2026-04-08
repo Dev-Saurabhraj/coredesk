@@ -23,17 +23,12 @@ class ServerException extends AppException {
   final int? statusCode;
 
   ServerException({
-    required String message,
-    String? code,
-    dynamic originalError,
+    required super.message,
+    super.code,
+    super.originalError,
     this.statusCode,
-    StackTrace? stackTrace,
-  }) : super(
-         message: message,
-         code: code,
-         originalError: originalError,
-         stackTrace: stackTrace,
-       );
+    super.stackTrace,
+  });
 
   @override
   bool get isRetryable => statusCode != null && statusCode! >= 500;

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/domain/usecases/auth_use_cases.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';

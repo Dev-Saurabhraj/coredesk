@@ -1,5 +1,4 @@
-import 'package:coredesk/core/exceptions/exceptions.dart';
-import 'package:coredesk/core/utils/error_handler.dart';
+import 'package:coredesk/core/index.dart';
 
 abstract class BaseRepository {
   Future<ApiResponseWrapper<T>> executeApi<T>(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/shared/widgets/custom_button.dart';
 
 class ErrorWidget extends StatelessWidget {

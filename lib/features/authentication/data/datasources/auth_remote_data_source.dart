@@ -1,5 +1,4 @@
-import 'package:coredesk/core/network/dio_client.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/data/models/auth_model.dart';
 
 import '../../../../core/apiServices/apiEndpoints.dart';

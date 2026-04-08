@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/exceptions/index.dart';
 
 abstract class BaseState extends Equatable {
   const BaseState();

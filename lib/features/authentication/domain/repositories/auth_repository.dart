@@ -3,8 +3,7 @@ import 'package:coredesk/features/authentication/data/datasources/auth_remote_da
 import 'package:coredesk/features/authentication/data/models/auth_model.dart';
 import 'package:coredesk/features/authentication/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:coredesk/core/constants/app_constants.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
+import 'package:coredesk/core/index.dart';
 
 abstract class AuthRepository {
   Future<AuthModel> login(String email, String password);

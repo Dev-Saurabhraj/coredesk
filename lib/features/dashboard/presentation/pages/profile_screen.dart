@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:coredesk/features/dashboard/presentation/helpers/responsive_helpers.dart';

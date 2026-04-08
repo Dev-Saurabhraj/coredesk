@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coredesk/core/exceptions/exceptions.dart';
-import 'package:coredesk/core/responsive/responsive_extensions.dart';
-import 'package:coredesk/core/utils/error_handler.dart';
-import 'package:coredesk/core/colors/app_colors.dart';
+import 'package:coredesk/core/index.dart';
 
 class ErrorWidget extends StatelessWidget {
   final AppException error;
@@ -11,16 +8,17 @@ class ErrorWidget extends StatelessWidget {
   final bool showRetry;
 
   const ErrorWidget({
-    Key? key,
+    super.key,
     required this.error,
     this.onRetry,
     this.onDismiss,
     this.showRetry = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final message = ErrorHandler.getUserFriendlyMessage(error);
+    HapticsService.errorTap();
 
     return Container(
       padding: EdgeInsets.all(context.responsive.cardPadding()),
@@ -54,7 +52,10 @@ class ErrorWidget extends StatelessWidget {
               ),
               if (onDismiss != null)
                 GestureDetector(
-                  onTap: onDismiss,
+                  onTap: () {
+                    HapticsService.lightTap();
+                    onDismiss!();
+                  },
                   child: Icon(
                     Icons.close,
                     color: AppColors.errorColor,
@@ -76,7 +77,10 @@ class ErrorWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: onRetry,
+                onPressed: () {
+                  HapticsService.mediumTap();
+                  onRetry!();
+                },
                 icon: Icon(Icons.refresh),
                 label: Text('Retry'),
                 style: ElevatedButton.styleFrom(
@@ -212,6 +216,7 @@ class ErrorSnackBar {
     SnackBarAction? action,
   }) {
     final message = ErrorHandler.getUserFriendlyMessage(error);
+    HapticsService.errorTap();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -253,6 +258,7 @@ class SuccessSnackBar {
     String message, {
     Duration duration = const Duration(seconds: 2),
   }) {
+    HapticsService.successTap();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

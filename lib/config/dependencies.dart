@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:coredesk/core/network/dio_client.dart';
+import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/data/datasources/auth_remote_data_source.dart';
 import 'package:coredesk/features/authentication/domain/repositories/auth_repository.dart'
     as auth_repo;
