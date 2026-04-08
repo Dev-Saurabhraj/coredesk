@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             EnhancedGreetingCard(
-              userName: 'Saurabh',
+              userName: state.user?.fullName ?? 'User',
               onProfileTap: () {},
               onNotificationsTap: () => _showNotificationsDialog(context),
             ),

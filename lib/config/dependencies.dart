@@ -53,12 +53,14 @@ class Dependencies {
     final getLeavesUseCase = GetLeavesUseCase(_dashboardRepository);
     final getHolidaysUseCase = GetHolidaysUseCase(_dashboardRepository);
     final getAttendanceUseCase = GetAttendanceUseCase(_dashboardRepository);
+    final getProfileUseCase = GetProfileUseCase(_authRepository);
 
     return DashboardBloc(
       getStatsUseCase: getStatsUseCase,
       getLeavesUseCase: getLeavesUseCase,
       getHolidaysUseCase: getHolidaysUseCase,
       getAttendanceUseCase: getAttendanceUseCase,
+      getProfileUseCase: getProfileUseCase,
     );
   }
 

@@ -84,7 +84,7 @@ class ResponsiveCard extends StatelessWidget {
   }
 }
 
-class ResponsiveSection extends StatelessWidget {
+class ResponsiveSection extends StatefulWidget {
   final String? title;
   final Widget child;
   final EdgeInsets? padding;
@@ -101,11 +101,38 @@ class ResponsiveSection extends StatelessWidget {
   });
 
   @override
+  State<ResponsiveSection> createState() => _ResponsiveSectionState();
+}
+
+class _ResponsiveSectionState extends State<ResponsiveSection>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null) ...[
+        if (widget.title != null) ...[
           Padding(
             padding: EdgeInsets.only(
               left: context.responsive.horizontalPadding(),
@@ -115,23 +142,67 @@ class ResponsiveSection extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title!,
-                  style:
-                      titleStyle ??
-                      Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontSize: context.adaptiveFont.titleLarge(),
-                        fontWeight: FontWeight.w600,
-                      ),
+                Expanded(
+                  child: Text(
+                    widget.title!,
+                    style:
+                        widget.titleStyle ??
+                        Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontSize: context.adaptiveFont.titleLarge(),
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.5,
+                          color: AppColors.textPrimary,
+                        ),
+                  ),
                 ),
-                if (onViewMore != null)
-                  GestureDetector(
-                    onTap: onViewMore,
-                    child: Text(
-                      'View More',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.primaryColor,
-                        fontSize: context.adaptiveFont.labelMedium(),
+                if (widget.onViewMore != null)
+                  ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: GestureDetector(
+                      onTapDown: (_) {
+                        _animationController.forward();
+                      },
+                      onTapUp: (_) {
+                        _animationController.reverse();
+                      },
+                      onTapCancel: () {
+                        _animationController.reverse();
+                      },
+                      onTap: widget.onViewMore,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: AppColors.primaryColor.withOpacity(0.2),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'View More',
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: context.adaptiveFont
+                                        .labelMedium(),
+                                  ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_rounded,
+                              color: AppColors.primaryColor,
+                              size: 16,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -141,11 +212,11 @@ class ResponsiveSection extends StatelessWidget {
         ],
         Padding(
           padding:
-              padding ??
+              widget.padding ??
               EdgeInsets.symmetric(
                 horizontal: context.responsive.horizontalPadding(),
               ),
-          child: child,
+          child: widget.child,
         ),
       ],
     );

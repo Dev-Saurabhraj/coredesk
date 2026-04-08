@@ -4,7 +4,10 @@ import 'package:coredesk/core/index.dart';
 import 'package:coredesk/shared/widgets/widgets.dart';
 import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_state.dart';
+import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_event.dart';
 import 'package:coredesk/features/dashboard/presentation/helpers/responsive_helpers.dart';
+import 'package:coredesk/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:coredesk/features/authentication/presentation/bloc/auth_state.dart';
 import '../widgets/leave_card.dart';
 
 class LeavesScreen extends StatefulWidget {
@@ -21,6 +24,19 @@ class _LeavesScreenState extends State<LeavesScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      final state = context.read<DashboardBloc>().state;
+      if (state is DashboardSuccess && !state.isLoadingMoreLeaves && !state.hasReachedMaxLeaves) {
+        final authState = context.read<AuthBloc>().state;
+        if (authState is AuthSuccess) {
+          context.read<DashboardBloc>().add(LoadMoreLeavesEvent(authState.auth.token));
+        }
+      }
+    }
   }
 
   @override
@@ -109,6 +125,17 @@ class _LeavesScreenState extends State<LeavesScreen> {
                       children: state.leaves
                           .map((leave) => LeaveCard(leave: leave))
                           .toList(),
+                    ),
+                  if (state.isLoadingMoreLeaves)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: LoadingShimmer(
+                          height: 100,
+                          width: double.infinity,
+                          borderRadius: 16,
+                        ),
+                      ),
                     ),
                 ],
               ),

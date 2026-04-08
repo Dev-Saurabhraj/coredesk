@@ -20,8 +20,8 @@ class GetLeavesUseCase {
 
   GetLeavesUseCase(this.repository);
 
-  Future<List<LeaveModel>> call(String token) {
-    return repository.getLeaves(token);
+  Future<List<LeaveModel>> call(String token, {int page = 1, int limit = 10}) {
+    return repository.getLeaves(token, page: page, limit: limit);
   }
 }
 
@@ -40,7 +40,7 @@ class GetAttendanceUseCase {
 
   GetAttendanceUseCase(this.repository);
 
-  Future<List<AttendanceModel>> call(String token) {
-    return repository.getAttendance(token);
+  Future<List<AttendanceModel>> call(String token, {int page = 1, int limit = 10}) {
+    return repository.getAttendance(token, page: page, limit: limit);
   }
 }

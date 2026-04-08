@@ -5,26 +5,27 @@ import 'package:coredesk/core/index.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:coredesk/features/authentication/presentation/bloc/auth_event.dart';
 import 'package:coredesk/features/dashboard/presentation/helpers/responsive_helpers.dart';
+import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:coredesk/features/dashboard/presentation/bloc/dashboard_state.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext parentContext) {
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+      context: parentContext,
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              context.read<AuthBloc>().add(const LogoutEvent());
-              context.go('/login');
+              Navigator.pop(dialogContext);
+              parentContext.read<AuthBloc>().add(const LogoutEvent());
             },
             child: const Text('Logout'),
           ),
@@ -40,8 +41,12 @@ class ProfileScreen extends StatelessWidget {
       screenWidth,
     );
 
-    return SingleChildScrollView(
-      child: Padding(
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        final user = state is DashboardSuccess ? state.user : null;
+
+        return SingleChildScrollView(
+          child: Padding(
         padding: EdgeInsets.fromLTRB(
           horizontalPadding,
           ResponsivePadding.topPadding,
@@ -102,7 +107,7 @@ class ProfileScreen extends StatelessWidget {
                           const SizedBox(height: 20),
                           // Name
                           Text(
-                            'Saurabh',
+                            user?.fullName ?? 'User',
                             style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(
                               color: AppColors.textPrimary,
@@ -112,7 +117,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Employee',
+                            user?.role ?? 'Employee',
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                               color: AppColors.textSecondary,
@@ -215,6 +220,8 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+      },
     );
   }
 

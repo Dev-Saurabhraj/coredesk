@@ -17,8 +17,8 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<List<LeaveModel>> getLeaves(String token) {
-    return remoteDataSource.getLeaves(token);
+  Future<List<LeaveModel>> getLeaves(String token, {int page = 1, int limit = 10}) {
+    return remoteDataSource.getLeaves(token, page: page, limit: limit);
   }
 
   @override
@@ -27,7 +27,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<List<AttendanceModel>> getAttendance(String token) {
-    return remoteDataSource.getAttendance(token);
+  Future<List<AttendanceModel>> getAttendance(String token, {int page = 1, int limit = 10}) {
+    return remoteDataSource.getAttendance(token, page: page, limit: limit);
   }
 }

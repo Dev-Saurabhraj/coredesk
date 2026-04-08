@@ -48,9 +48,9 @@ class DioClient {
   ) async {
     final options = _createOptions(token);
 
-    final mockData = _getMockData(path);
+    final mockData = _getMockData(path, queryParameters);
     if (mockData != null) {
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(seconds: 1)); // Delay for smooth UI shimmer testing
       return mockData;
     }
 
@@ -206,17 +206,69 @@ class DioClient {
     return options;
   }
 
-  dynamic _getMockData(String path) {
+  dynamic _getMockData(String path, Map<String, dynamic>? queryParameters) {
     if (path == ApiEndpoints.user) {
       return mockUserResponse;
     } else if (path == ApiEndpoints.stats) {
       return mockStatsResponse;
-    } else if (path == ApiEndpoints.leaves) {
-      return mockLeavesResponse;
+    }
+    
+    List<dynamic>? rawData;
+    if (path == ApiEndpoints.leaves) {
+      rawData = mockLeavesResponse;
     } else if (path == ApiEndpoints.holidays) {
-      return mockHolidaysResponse;
+      rawData = mockHolidaysResponse;
     } else if (path.contains('attendance')) {
-      return mockAttendanceResponse;
+      rawData = mockAttendanceResponse;
+    }
+
+    if (rawData != null) {
+      if (queryParameters == null || !queryParameters.containsKey('page')) {
+        return rawData;
+      }
+
+      final expandedDataset = List.generate(
+        60,
+        (i) {
+          final original = rawData![i % rawData.length] as Map;
+          final updatedItem = Map<String, dynamic>.from(original);
+          
+          updatedItem['id'] = '${original['id']}_$i';
+
+          // Shift dates so items are unique rather than visual duplicates
+          try {
+            if (updatedItem.containsKey('date')) {
+              final d = DateTime.parse(updatedItem['date'] as String);
+              updatedItem['date'] = d.subtract(Duration(days: i)).toIso8601String().split('T').first;
+            }
+            if (updatedItem.containsKey('startDate')) {
+              final ds = DateTime.parse(updatedItem['startDate'] as String);
+              updatedItem['startDate'] = ds.subtract(Duration(days: i * 3)).toIso8601String().split('T').first;
+              if (updatedItem.containsKey('endDate')) {
+                final de = DateTime.parse(updatedItem['endDate'] as String);
+                updatedItem['endDate'] = de.subtract(Duration(days: i * 3)).toIso8601String().split('T').first;
+              }
+            }
+          } catch (_) {
+            // Keep original if parsing fails
+          }
+          return updatedItem;
+        },
+      );
+
+      final page = int.tryParse(queryParameters['page']?.toString() ?? '1') ?? 1;
+      final limit = int.tryParse(queryParameters['limit']?.toString() ?? '10') ?? 10;
+      
+      final startIndex = (page - 1) * limit;
+      if (startIndex >= expandedDataset.length) {
+        return <dynamic>[];
+      }
+      
+      final endIndex = (startIndex + limit) > expandedDataset.length 
+          ? expandedDataset.length 
+          : (startIndex + limit);
+          
+      return expandedDataset.sublist(startIndex, endIndex);
     }
     return null;
   }

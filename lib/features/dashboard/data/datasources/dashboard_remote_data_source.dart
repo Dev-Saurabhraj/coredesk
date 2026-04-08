@@ -7,9 +7,17 @@ import '../models/dashboard_stats_model.dart';
 
 abstract class DashboardRemoteDataSource {
   Future<DashboardStatsModel> getStats(String token);
-  Future<List<LeaveModel>> getLeaves(String token);
+  Future<List<LeaveModel>> getLeaves(
+    String token, {
+    int page = 1,
+    int limit = 10,
+  });
   Future<List<HolidayModel>> getHolidays(String token);
-  Future<List<AttendanceModel>> getAttendance(String token);
+  Future<List<AttendanceModel>> getAttendance(
+    String token, {
+    int page = 1,
+    int limit = 10,
+  });
 }
 
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
@@ -40,7 +48,11 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   }
 
   @override
-  Future<List<LeaveModel>> getLeaves(String token) async {
+  Future<List<LeaveModel>> getLeaves(
+    String token, {
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
       if (token.trim().isEmpty) {
         throw AuthException(
@@ -48,14 +60,21 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
           code: 'EMPTY_TOKEN',
         );
       }
-      final response = await dioClient.get(ApiEndpoints.leaves, token: token);
+      final response = await dioClient.get(
+        ApiEndpoints.leaves,
+        token: token,
+        queryParameters: {'page': page, 'limit': limit},
+      );
       if (response == null) {
         return [];
       }
       final list = response as List;
-      return list
+      final leaves = list
           .map((e) => LeaveModel.fromJson(e as Map<String, dynamic>))
           .toList();
+
+      // Deduplicate using Set (leverages hashCode and == operator)
+      return leaves.toSet().toList();
     } catch (e) {
       rethrow;
     }
@@ -84,7 +103,11 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   }
 
   @override
-  Future<List<AttendanceModel>> getAttendance(String token) async {
+  Future<List<AttendanceModel>> getAttendance(
+    String token, {
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
       if (token.trim().isEmpty) {
         throw AuthException(
@@ -95,14 +118,18 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       final response = await dioClient.get(
         '${ApiEndpoints.stats}/attendance',
         token: token,
+        queryParameters: {'page': page, 'limit': limit},
       );
       if (response == null) {
         return [];
       }
       final list = response as List;
-      return list
+      final attendance = list
           .map((e) => AttendanceModel.fromJson(e as Map<String, dynamic>))
           .toList();
+
+      // Deduplicate using Set (leverages hashCode and == operator)
+      return attendance.toSet().toList();
     } catch (e) {
       rethrow;
     }

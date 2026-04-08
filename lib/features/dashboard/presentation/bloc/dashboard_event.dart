@@ -60,3 +60,21 @@ class FetchAttendanceEvent extends DashboardEvent {
   @override
   List<Object?> get props => [token];
 }
+
+class LoadMoreLeavesEvent extends DashboardEvent {
+  final String token;
+
+  const LoadMoreLeavesEvent(this.token);
+
+  @override
+  List<Object?> get props => [token];
+}
+
+class LoadMoreAttendanceEvent extends DashboardEvent {
+  final String token;
+
+  const LoadMoreAttendanceEvent(this.token);
+
+  @override
+  List<Object?> get props => [token];
+}

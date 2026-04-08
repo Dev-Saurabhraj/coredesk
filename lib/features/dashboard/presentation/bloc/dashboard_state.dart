@@ -4,6 +4,7 @@ import 'package:coredesk/features/attendance/data/models/attendance_model.dart';
 
 import '../../data/models/dashboard_stats_model.dart';
 import '../../data/models/holiday_model.dart';
+import '../../../authentication/data/models/user_model.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();
@@ -41,16 +42,73 @@ class DashboardSuccess extends DashboardState {
   final List<LeaveModel> leaves;
   final List<HolidayModel> holidays;
   final List<AttendanceModel> attendance;
+  final UserModel? user;
+
+  // Pagination flags
+  final bool isLoadingMoreLeaves;
+  final bool hasReachedMaxLeaves;
+  final int leavesPage;
+
+  final bool isLoadingMoreAttendance;
+  final bool hasReachedMaxAttendance;
+  final int attendancePage;
 
   const DashboardSuccess({
     required this.stats,
     required this.leaves,
     required this.holidays,
     required this.attendance,
+    this.user,
+    this.isLoadingMoreLeaves = false,
+    this.hasReachedMaxLeaves = false,
+    this.leavesPage = 1,
+    this.isLoadingMoreAttendance = false,
+    this.hasReachedMaxAttendance = false,
+    this.attendancePage = 1,
   });
 
+  DashboardSuccess copyWith({
+    DashboardStatsModel? stats,
+    List<LeaveModel>? leaves,
+    List<HolidayModel>? holidays,
+    List<AttendanceModel>? attendance,
+    UserModel? user,
+    bool? isLoadingMoreLeaves,
+    bool? hasReachedMaxLeaves,
+    int? leavesPage,
+    bool? isLoadingMoreAttendance,
+    bool? hasReachedMaxAttendance,
+    int? attendancePage,
+  }) {
+    return DashboardSuccess(
+      stats: stats ?? this.stats,
+      leaves: leaves ?? this.leaves,
+      holidays: holidays ?? this.holidays,
+      attendance: attendance ?? this.attendance,
+      user: user ?? this.user,
+      isLoadingMoreLeaves: isLoadingMoreLeaves ?? this.isLoadingMoreLeaves,
+      hasReachedMaxLeaves: hasReachedMaxLeaves ?? this.hasReachedMaxLeaves,
+      leavesPage: leavesPage ?? this.leavesPage,
+      isLoadingMoreAttendance: isLoadingMoreAttendance ?? this.isLoadingMoreAttendance,
+      hasReachedMaxAttendance: hasReachedMaxAttendance ?? this.hasReachedMaxAttendance,
+      attendancePage: attendancePage ?? this.attendancePage,
+    );
+  }
+
   @override
-  List<Object?> get props => [stats, leaves, holidays, attendance];
+  List<Object?> get props => [
+        stats,
+        leaves,
+        holidays,
+        attendance,
+        user,
+        isLoadingMoreLeaves,
+        hasReachedMaxLeaves,
+        leavesPage,
+        isLoadingMoreAttendance,
+        hasReachedMaxAttendance,
+        attendancePage,
+      ];
 }
 
 class DashboardStatsSuccess extends DashboardState {

@@ -6,7 +6,6 @@ import 'package:coredesk/shared/widgets/app_bottom_navigation_bar.dart'
 import 'package:coredesk/features/leaves/presentation/index.dart';
 import 'package:coredesk/features/attendance/presentation/index.dart';
 
-
 class DashboardPage extends StatefulWidget {
   final String token;
 
@@ -24,7 +23,11 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    context.read<DashboardBloc>().add(FetchDashboardDataEvent(widget.token));
+    // Check if data is already loaded to prevent duplicate fetches
+    final dashboardBloc = context.read<DashboardBloc>();
+    if (dashboardBloc.state is! DashboardSuccess) {
+      dashboardBloc.add(FetchDashboardDataEvent(widget.token));
+    }
   }
 
   @override
